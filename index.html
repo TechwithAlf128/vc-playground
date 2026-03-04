@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VC Playground - Investment Analysis Tool</title>
+    <title>VC PlayGround - Investment Decision Tool</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -12,145 +12,194 @@
         <!-- Header -->
         <header class="header">
             <div class="header-content">
-                <h1>💰 VC Playground</h1>
-                <p>Analyze your venture capital investments</p>
+                <h1>🚀 VC Playground</h1>
+                <p>AI-Powered Investment Decision Tool</p>
             </div>
             <div class="theme-toggle">
                 <button id="themeBtn" class="theme-btn">🌙 Dark Mode</button>
             </div>
         </header>
 
-        <!-- Main Dashboard -->
+        <!-- Main Content -->
         <main class="dashboard">
-            <!-- Metrics Cards -->
-            <section class="metrics-section">
-                <div class="metric-card">
-                    <div class="metric-label">Total Invested</div>
-                    <div class="metric-value" id="totalInvested">$0</div>
+            <!-- Start Screen -->
+            <div id="startScreen" class="screen">
+                <div class="start-container">
+                    <h2>Evaluate Your Next Investment</h2>
+                    <p>Submit a business pitch and get a detailed analysis to decide whether to invest.</p>
+                    <button id="startBtn" class="btn btn-primary btn-large">Start Evaluation</button>
                 </div>
-                <div class="metric-card">
-                    <div class="metric-label">Number of Deals</div>
-                    <div class="metric-value" id="dealCount">0</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-label">Current Portfolio Value</div>
-                    <div class="metric-value" id="portfolioValue">$0</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-label">Average ROI</div>
-                    <div class="metric-value" id="avgROI">0%</div>
-                </div>
-            </section>
+            </div>
 
-            <!-- Charts Row -->
-            <section class="charts-section">
-                <div class="chart-container">
-                    <h3>Sector Breakdown</h3>
-                    <canvas id="sectorChart"></canvas>
-                </div>
-                <div class="chart-container">
-                    <h3>Stage Distribution</h3>
-                    <canvas id="stageChart"></canvas>
-                </div>
-            </section>
-
-            <!-- Controls -->
-            <section class="controls-section">
-                <button id="addBtn" class="btn btn-primary">+ Add Investment</button>
-                <div class="filter-group">
-                    <select id="sectorFilter" class="filter-select">
-                        <option value="">All Sectors</option>
-                    </select>
-                    <select id="stageFilter" class="filter-select">
-                        <option value="">All Stages</option>
-                        <option value="Seed">Seed</option>
-                        <option value="Series A">Series A</option>
-                        <option value="Series B">Series B</option>
-                        <option value="Series C">Series C+</option>
-                        <option value="Growth">Growth</option>
-                        <option value="Late Stage">Late Stage</option>
-                    </select>
-                    <button id="exportBtn" class="btn btn-secondary">📥 Export JSON</button>
-                    <button id="importBtn" class="btn btn-secondary">📤 Import JSON</button>
-                    <input type="file" id="importFile" style="display:none;" accept=".json">
-                </div>
-            </section>
-
-            <!-- Investments Table -->
-            <section class="table-section">
-                <h3>Investment Portfolio</h3>
-                <div class="table-wrapper">
-                    <table id="investmentsTable" class="investments-table">
-                        <thead>
-                            <tr>
-                                <th>Company</th>
-                                <th>Sector</th>
-                                <th>Stage</th>
-                                <th>Invested</th>
-                                <th>Current Value</th>
-                                <th>ROI</th>
-                                <th>MOIC</th>
-                                <th>Notes</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="investmentsBody">
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-        </main>
-    </div>
-
-    <!-- Add/Edit Modal -->
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2 id="modalTitle">Add Investment</h2>
-            <form id="investmentForm">
-                <div class="form-group">
-                    <label for="companyName">Company Name *</label>
-                    <input type="text" id="companyName" required>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="sector">Sector *</label>
-                        <input type="text" id="sector" placeholder="e.g., AI, Fintech, Biotech" required>
+            <!-- Pitch Input Screen -->
+            <div id="pitchScreen" class="screen hidden">
+                <h2>📋 Business Pitch</h2>
+                <form id="pitchForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="companyName">Company Name *</label>
+                            <input type="text" id="companyName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sector">Sector *</label>
+                            <input type="text" id="sector" placeholder="e.g., AI, Fintech, Biotech" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="stage">Investment Stage *</label>
+                            <select id="stage" required>
+                                <option value="">Select Stage</option>
+                                <option value="Seed">Seed</option>
+                                <option value="Series A">Series A</option>
+                                <option value="Series B">Series B</option>
+                                <option value="Series C">Series C+</option>
+                                <option value="Growth">Growth</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="askAmount">Fundraising Ask ($M) *</label>
+                            <input type="number" id="askAmount" min="0.1" step="0.1" required>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="stage">Stage *</label>
-                        <select id="stage" required>
-                            <option value="">Select Stage</option>
-                            <option value="Seed">Seed</option>
-                            <option value="Series A">Series A</option>
-                            <option value="Series B">Series B</option>
-                            <option value="Series C">Series C+</option>
-                            <option value="Growth">Growth</option>
-                            <option value="Late Stage">Late Stage</option>
-                        </select>
+                        <label for="pitchDescription">Business Description *</label>
+                        <textarea id="pitchDescription" rows="4" placeholder="Problem, solution, market opportunity..." required></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Continue</button>
+                        <button type="button" class="btn btn-secondary" onclick="goToStart()">Back</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Weights Screen -->
+            <div id="weightsScreen" class="screen hidden">
+                <h2>⚖️ Customize Evaluation Weights</h2>
+                <p class="subtitle">How important is each factor in your investment decision? (Total: 100%)</p>
+                
+                <div class="weights-container">
+                    <div class="weight-item">
+                        <label for="teamWeight">👥 Team Quality & Execution</label>
+                        <div class="weight-input-group">
+                            <input type="range" id="teamWeight" min="0" max="100" value="25" class="weight-slider">
+                            <span class="weight-value" id="teamValue">25%</span>
+                        </div>
+                    </div>
+                    <div class="weight-item">
+                        <label for="marketWeight">🎯 Market Opportunity</label>
+                        <div class="weight-input-group">
+                            <input type="range" id="marketWeight" min="0" max="100" value="25" class="weight-slider">
+                            <span class="weight-value" id="marketValue">25%</span>
+                        </div>
+                    </div>
+                    <div class="weight-item">
+                        <label for="productWeight">📦 Product & Traction</label>
+                        <div class="weight-input-group">
+                            <input type="range" id="productWeight" min="0" max="100" value="20" class="weight-slider">
+                            <span class="weight-value" id="productValue">20%</span>
+                        </div>
+                    </div>
+                    <div class="weight-item">
+                        <label for="businessWeight">💼 Business Model & Economics</label>
+                        <div class="weight-input-group">
+                            <input type="range" id="businessWeight" min="0" max="100" value="15" class="weight-slider">
+                            <span class="weight-value" id="businessValue">15%</span>
+                        </div>
+                    </div>
+                    <div class="weight-item">
+                        <label for="riskWeight">⚠️ Risk Management</label>
+                        <div class="weight-input-group">
+                            <input type="range" id="riskWeight" min="0" max="100" value="10" class="weight-slider">
+                            <span class="weight-value" id="riskValue">10%</span>
+                        </div>
+                    </div>
+                    <div class="weight-item">
+                        <label for="termsWeight">📝 Terms & Valuation</label>
+                        <div class="weight-input-group">
+                            <input type="range" id="termsWeight" min="0" max="100" value="5" class="weight-slider">
+                            <span class="weight-value" id="termsValue">5%</span>
+                        </div>
                     </div>
                 </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="amountInvested">Amount Invested ($) *</label>
-                        <input type="number" id="amountInvested" min="0" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="currentValuation">Current Valuation ($) *</label>
-                        <input type="number" id="currentValuation" min="0" step="0.01" required>
-                    </div>
+
+                <div class="total-weight">
+                    <strong>Total Weight:</strong> <span id="totalWeight">100%</span>
                 </div>
-                <div class="form-group">
-                    <label for="investmentNotes">Notes</label>
-                    <textarea id="investmentNotes" rows="3" placeholder="Key insights, performance notes, etc."></textarea>
-                </div>
+
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">Save Investment</button>
-                    <button type="button" id="deleteBtn" class="btn btn-danger" style="display:none;">Delete</button>
-                    <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="startAssessment()">Start Assessment</button>
+                    <button type="button" class="btn btn-secondary" onclick="goBack()">Back</button>
                 </div>
-            </form>
-        </div>
+            </div>
+
+            <!-- Assessment Screen -->
+            <div id="assessmentScreen" class="screen hidden">
+                <div class="assessment-header">
+                    <h2 id="categoryTitle">Team Quality & Execution</h2>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <p id="questionCounter">Question 1 of 24</p>
+                </div>
+
+                <div class="question-container">
+                    <p id="questionText" class="question-text"></p>
+                    <div id="answersContainer" class="answers-grid"></div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="prevBtn" onclick="prevQuestion()" style="display:none;">Previous</button>
+                    <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" disabled>Next</button>
+                    <button type="button" class="btn btn-secondary" onclick="goBack()">Cancel</button>
+                </div>
+            </div>
+
+            <!-- Results Screen -->
+            <div id="resultsScreen" class="screen hidden">
+                <h2>📊 Investment Decision Analysis</h2>
+                
+                <div class="company-info">
+                    <h3 id="resultsCompanyName"></h3>
+                    <p id="resultsCompanyDetails"></p>
+                </div>
+
+                <div class="decision-box" id="decisionBox">
+                    <div class="decision-icon" id="decisionIcon"></div>
+                    <div class="decision-content">
+                        <h2 id="decisionTitle"></h2>
+                        <p id="decisionReasoning"></p>
+                    </div>
+                </div>
+
+                <div class="scores-grid">
+                    <div class="score-card">
+                        <div class="score-label">Overall Score</div>
+                        <div class="score-large" id="overallScore">0/100</div>
+                        <canvas id="overallChart"></canvas>
+                    </div>
+
+                    <div class="score-card">
+                        <div class="score-label">Category Breakdown</div>
+                        <div id="categoryScores"></div>
+                    </div>
+                </div>
+
+                <div class="strengths-weaknesses">
+                    <div class="column">
+                        <h4>✅ Strengths</h4>
+                        <ul id="strengthsList"></ul>
+                    </div>
+                    <div class="column">
+                        <h4>⚠️ Concerns</h4>
+                        <ul id="concernsList"></ul>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-primary" onclick="startOver()">Evaluate Another</button>
+                    <button type="button" class="btn btn-secondary" onclick="downloadResults()">Download Report</button>
+                </div>
+            </div>
+        </main>
     </div>
 
     <script src="app.js"></script>
